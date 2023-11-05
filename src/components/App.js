@@ -1,28 +1,49 @@
 import React, { useState } from "react";
-import { Route, Switch } from "react-router-dom";
-import NavBar from "./NavBar";
-import MoviesPage from "./MoviesPage";
+import { useHistory } from "react-router-dom";
 
-function App() {
-  const [movies, setMovies] = useState([
-    { id: 1, title: "A River Runs Through It" },
-    { id: 2, title: "Se7en" },
-    { id: 3, title: "Inception" }
-  ]);
+function Login({ setIsLoggedIn }) {
+  const history = useHistory();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  function handleChange(e) {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if(formData.username && formData.password){
+      setIsLoggedIn(true);
+      history.push("/");
+    }
+
+
+    // after logging the user in, redirect to the home page!
+  }
 
   return (
-    <div>
-      <NavBar />
-      <Switch>
-        <Route path="/movies">
-          <MoviesPage movies={movies} />
-        </Route>
-        <Route exact path="/">
-          <div>Home</div>
-        </Route>
-      </Switch>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h1>Login</h1>
+      <input
+        type="text"
+        name="username"
+        value={formData.username}
+        onChange={handleChange}
+      />
+      <input
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+      />
+      <button type="submit">Login</button>
+    </form>
   );
 }
 
-export default App;
+export default Login;
